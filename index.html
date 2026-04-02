@@ -163,10 +163,7 @@
     section.card ul { margin: 8px 0 0; padding-left: 1.25rem; }
     section.card li { margin-bottom: 6px; }
 
-    .figure-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
+    figure.result-benchmark {
       margin-top: 16px;
     }
     figure {
@@ -333,16 +330,10 @@
         At the same or lower BPP (e.g. 0.013 BPP), the method consistently outperforms H.265 and the diffusion-based VC-DM in PSNR, LPIPS, FVD, etc. On UVG, average PSNR is about <strong>26.36 dB</strong> and FVD about <strong>1289</strong>. At 6 dB SNR, FVD is reduced by roughly 1500 compared to conventional H.265 transmission. Experiments use <strong>MCL-JCV</strong> and <strong>UVG</strong>, with Cosmos video tokenizer and CLIP as the vision–language model.
       </p>
 
-      <div class="figure-grid">
-        <figure>
-          <img src="assets/Figure_MCL-JCV_3.5_t0.5.png" alt="Qualitative or metric comparison on MCL-JCV" loading="lazy" />
-          <figcaption>MCL-JCV（示例图，来自论文素材目录）</figcaption>
-        </figure>
-        <figure>
-          <img src="assets/Figure_UVG_10.6_t0.5.png" alt="Qualitative or metric comparison on UVG" loading="lazy" />
-          <figcaption>UVG（示例图，来自论文素材目录）</figcaption>
-        </figure>
-      </div>
+      <figure class="result-benchmark">
+        <img src="assets/benchmark.png" alt="Benchmark comparison with baselines on MCL-JCV and UVG" loading="lazy" />
+        <figcaption>Benchmark comparison (MCL-JCV &amp; UVG)</figcaption>
+      </figure>
 
       <h3>4.2 Controllability by textual intent</h3>
       <p>
