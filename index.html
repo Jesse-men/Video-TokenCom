@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Video TokenCom — Textual Intent-guided Multi-Rate Video Token Communications</title>
+  <meta name="description" content="Textual intent-guided multi-rate video TokenCom with UEP-based adaptive source–channel coding." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #ffffff;
+      --bg-muted: #f6f8fa;
+      --border: #d0d7de;
+      --text: #1f2328;
+      --text-secondary: #656d76;
+      --accent: #0969da;
+      --accent-hover: #0550ae;
+      --header-bg: #24292f;
+      --header-text: #f6f8fa;
+      --radius: 6px;
+      --max: 980px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, "Noto Sans SC", -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--text);
+      background: var(--bg-muted);
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; color: var(--accent-hover); }
+
+    .gh-header {
+      background: var(--header-bg);
+      color: var(--header-text);
+      border-bottom: 1px solid rgba(255,255,255,.1);
+      padding: 12px 24px;
+    }
+    .gh-header-inner {
+      max-width: var(--max);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .gh-brand {
+      font-weight: 600;
+      font-size: 0.95rem;
+      letter-spacing: -0.02em;
+    }
+    .gh-brand span { opacity: 0.75; font-weight: 400; }
+    .gh-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      font-size: 0.875rem;
+    }
+    .gh-nav a {
+      color: var(--header-text);
+      opacity: 0.9;
+    }
+    .gh-nav a:hover { opacity: 1; text-decoration: underline; }
+
+    .page {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 32px 24px 64px;
+    }
+
+    .hero {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px 28px;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 3px rgba(31,35,40,.08);
+    }
+    .hero h1 {
+      margin: 0 0 12px;
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.25;
+    }
+    .hero .subtitle {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      margin: 0 0 20px;
+      max-width: 52rem;
+    }
+    .hero-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      border-radius: 999px;
+      background: var(--bg-muted);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #fff;
+      background: #2da44e;
+      border: 1px solid rgba(27,31,36,.15);
+      border-radius: var(--radius);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.25);
+    }
+    .btn:hover {
+      background: #2c974b;
+      color: #fff;
+      text-decoration: none;
+    }
+    .btn-secondary {
+      background: var(--bg);
+      color: var(--text);
+      border-color: var(--border);
+      box-shadow: none;
+    }
+    .btn-secondary:hover {
+      background: var(--bg-muted);
+      color: var(--text);
+    }
+
+    section.card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      margin-bottom: 16px;
+    }
+    section.card h2 {
+      margin: 0 0 16px;
+      font-size: 1.25rem;
+      font-weight: 600;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    section.card h3 {
+      margin: 24px 0 10px;
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+    section.card p, section.card li { color: var(--text); }
+    section.card ul { margin: 8px 0 0; padding-left: 1.25rem; }
+    section.card li { margin-bottom: 6px; }
+
+    .figure-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-top: 16px;
+    }
+    figure {
+      margin: 0;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--bg-muted);
+    }
+    figure img {
+      width: 100%;
+      height: auto;
+      display: block;
+      vertical-align: middle;
+    }
+    figcaption {
+      padding: 10px 12px;
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+      border-top: 1px solid var(--border);
+      background: var(--bg);
+    }
+
+    .callout {
+      margin-top: 12px;
+      padding: 12px 14px;
+      background: var(--bg-muted);
+      border-left: 4px solid var(--accent);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      font-size: 0.9375rem;
+    }
+
+    footer.site-footer {
+      max-width: var(--max);
+      margin: 32px auto 0;
+      padding: 24px;
+      text-align: center;
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+      border-top: 1px solid var(--border);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0d1117;
+        --bg-muted: #161b22;
+        --border: #30363d;
+        --text: #e6edf3;
+        --text-secondary: #8b949e;
+        --accent: #58a6ff;
+        --accent-hover: #79b8ff;
+        --header-bg: #161b22;
+        --header-text: #e6edf3;
+      }
+      .hero, section.card, figure, figcaption {
+        box-shadow: none;
+      }
+      .btn-secondary {
+        background: #21262d;
+        color: var(--text);
+        border-color: var(--border);
+      }
+      .btn-secondary:hover {
+        background: #30363d;
+      }
+      .badge {
+        background: #21262d;
+        color: var(--text-secondary);
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="gh-header">
+    <div class="gh-header-inner">
+      <div class="gh-brand">Video-TokenCom <span>/ project page</span></div>
+      <nav class="gh-nav" aria-label="Section navigation">
+        <a href="#overview">Overview</a>
+        <a href="#architecture">Architecture</a>
+        <a href="#methods">Methods</a>
+        <a href="#results">Results</a>
+        <a href="#ablation">Ablation</a>
+        <a href="#conclusion">Conclusion</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page">
+    <article class="hero">
+      <div class="hero-badges">
+        <span class="badge">Video Token Communication</span>
+        <span class="badge">UEP · Multi-rate · Intent-guided</span>
+      </div>
+      <h1>Video TokenCom</h1>
+      <p class="subtitle">
+        Textual Intent-guided Multi-Rate Video Token Communications with UEP-based Adaptive Source–Channel Coding
+      </p>
+      <p style="margin:0 0 16px; font-size:0.9rem; color:var(--text-secondary);">
+        本页由 <code>video_tokencom.pptx</code> 幻灯内容整理，风格参考 GitHub 项目页；正文与幻灯一致为英文。
+      </p>
+      <div style="display:flex; flex-wrap:wrap; gap:10px;">
+        <a class="btn" href="https://github.com/Jesse-men/Video-TokenCom" rel="noopener">View on GitHub</a>
+        <a class="btn btn-secondary" href="#overview">Read overview</a>
+      </div>
+    </article>
+
+    <section id="overview" class="card">
+      <h2>1. Motivation and background</h2>
+      <p>
+        In vision and multimodal large models, <strong>tokens</strong> are the fundamental units of representation and processing. Discretizing video into token sequences compresses data while preserving high-level semantics, which aligns well with transmitting useful information under limited resources in wireless systems. Token Communication (TokenCom) has emerged as a new paradigm: instead of bit-level end-to-end transmission, we operate on semantic token representations for compression and transmission.
+      </p>
+      <p>
+        Existing work has explored TokenCom for images, multi-user access, semantic packet aggregation, and so on, but <strong>video TokenCom is less studied</strong>. Most video semantic communication systems use continuous features or task-specific latent codes and do not explicitly exploit discrete video tokens or token-level, intent-aware rate and channel protection.
+      </p>
+      <div class="callout">
+        <strong>Core problem:</strong> How to use user textual intent to drive video token extraction, encoding, and transmission, and to adapt both source and channel coding so that semantic fidelity and transmission delay are balanced under limited bandwidth.
+      </div>
+    </section>
+
+    <section id="architecture" class="card">
+      <h2>2. Architecture</h2>
+
+      <h3>Textual intent–guided token source encoder</h3>
+      <p>
+        Inputs are the raw video and a user textual intent description. A pretrained video tokenizer turns the video into a discrete token grid. In parallel, a vision–language model and optical flow find regions that match the textual intent in space and time, and map them onto the token grid to obtain “user-intended” and “non-intended” token sets. <strong>Semantic-aware multi-rate coding</strong> follows: intended tokens are transmitted at full codebook precision (e.g. 16 bits), while non-intended tokens are encoded differentially at reduced precision relative to a reference frame (e.g. 11 bits), saving bitrate while keeping the quality of regions of interest.
+      </p>
+
+      <h3>Token source decoder</h3>
+      <p>
+        The receiver uses the semantic mask to decode intended tokens from full indices and to recover non-intended tokens as reference plus differential. The tokenizer decoder then reconstructs the video.
+      </p>
+
+      <h3>UEP-based source–channel joint adaptation</h3>
+      <p>
+        Intended and non-intended token streams are treated separately; modulation-and-coding scheme (MCS) and source bit precision are chosen for each. Under a given resource budget, the framework optimizes a weighted combination of <strong>distortion</strong> and <strong>delay</strong>, and applies <strong>unequal error protection (UEP)</strong> so that semantically important content is better protected.
+      </p>
+    </section>
+
+    <section id="methods" class="card">
+      <h2>3. Methods</h2>
+
+      <h3>3.1 Multi-modal user-intended token extraction</h3>
+      <p>
+        A multimodal, spatio-temporal pipeline identifies “user-intended” tokens.
+      </p>
+      <ul>
+        <li><strong>Step 1 — Text-conditioned heatmap.</strong> For the first frame, a pretrained vision–language model (e.g. CLIP) computes similarity between each image patch and the textual intent, giving a heatmap. After normalization and thresholding, a binary patch-level mask is upsampled to pixel resolution for the first frame.</li>
+        <li><strong>Step 2 — Optical-flow propagation.</strong> Optical flow propagates the first-frame semantic mask to every subsequent frame, yielding a pixel-level semantic mask sequence for the whole video.</li>
+        <li><strong>Step 3 — Mapping to the token grid.</strong> The tokenizer outputs a 3D grid (time × height × width). Pixel-level masks are aggregated over corresponding temporal and spatial token blocks and thresholded to obtain a <strong>token-level binary semantic mask</strong>: if the fraction of “intended” pixels in a token’s region exceeds the threshold, that token is intended; otherwise non-intended. This yields <strong>intended</strong> and <strong>non-intended</strong> token sets for multi-rate coding and UEP.</li>
+      </ul>
+
+      <h3>3.2 Semantic-aware multi-rate coding and UEP optimization</h3>
+      <p><strong>Multi-rate source coding:</strong></p>
+      <ul>
+        <li><strong>Intended tokens:</strong> full codebook indices with <em>B<sub>full</sub></em> bits (e.g. 16).</li>
+        <li><strong>Non-intended tokens:</strong> the <em>difference</em> relative to a reference frame, quantized to <em>B<sub>Delta</sub></em> bits (e.g. 11). The difference is clipped to a symmetric range and shifted to non-negative values for the bitstream.</li>
+      </ul>
+      <p><strong>UEP and joint optimization:</strong> The two token classes can use different MCS (e.g. QPSK, 16QAM) and channel coding rates. A joint distortion–delay problem is formulated: under bandwidth and resource-block constraints, source bit precision and MCS per class minimize a weighted sum of distortion and delay, subject to reliability (e.g. BLER) constraints. This is a mixed-integer linear program (MILP); with a small candidate set it is tractable per scheduling window.</p>
+      <p><strong>Decoding and side information:</strong> The receiver needs to know whether each token is intended or not. Only the first-frame semantic mask is transmitted; it is propagated over time using lightweight block motion on the token grid (side-information overhead about 1.7% in the paper).</p>
+    </section>
+
+    <section id="results" class="card">
+      <h2>4. Numerical results</h2>
+
+      <h3>4.1 Comparison with baselines</h3>
+      <p>
+        At the same or lower BPP (e.g. 0.013 BPP), the method consistently outperforms H.265 and the diffusion-based VC-DM in PSNR, LPIPS, FVD, etc. On UVG, average PSNR is about <strong>26.36 dB</strong> and FVD about <strong>1289</strong>. At 6 dB SNR, FVD is reduced by roughly 1500 compared to conventional H.265 transmission. Experiments use <strong>MCL-JCV</strong> and <strong>UVG</strong>, with Cosmos video tokenizer and CLIP as the vision–language model.
+      </p>
+
+      <div class="figure-grid">
+        <figure>
+          <img src="assets/Figure_MCL-JCV_3.5_t0.5.png" alt="Qualitative or metric comparison on MCL-JCV" loading="lazy" />
+          <figcaption>MCL-JCV（示例图，来自论文素材目录）</figcaption>
+        </figure>
+        <figure>
+          <img src="assets/Figure_UVG_10.6_t0.5.png" alt="Qualitative or metric comparison on UVG" loading="lazy" />
+          <figcaption>UVG（示例图，来自论文素材目录）</figcaption>
+        </figure>
+      </div>
+
+      <h3>4.2 Controllability by textual intent</h3>
+      <p>
+        When the intent changes from “the woman is hitting the man’s mobile phone” to “sky”, the high-precision region shifts from the person and phone to the sky, with similar total bitrate—showing rate allocation follows user intent.
+      </p>
+
+      <h3>4.3 Channel adaptation</h3>
+      <p>
+        Under different bandwidth budgets and SNRs, the joint optimizer selects different MCS and bit precision. As bandwidth increases, PSNR improves and delay decreases. At low SNR, H.265 often fails to decode a large fraction of frames, while this framework remains decodable across SNRs and is more robust.
+      </p>
+    </section>
+
+    <section id="ablation" class="card">
+      <h2>5. Ablation</h2>
+      <p>
+        Removing textual intent (randomly choosing “non-intended” tokens) degrades CLIP, LPIPS, and FVD at low <em>B<sub>Delta</sub></em>, showing that <strong>intent-guided rate allocation</strong> is important for semantic fidelity.
+      </p>
+    </section>
+
+    <section id="conclusion" class="card">
+      <h2>6. Conclusion</h2>
+      <p>
+        We proposed a <strong>textual intent–guided video TokenCom framework</strong> that unifies video tokenization, user-intent extraction, multi-rate source coding, and UEP-based source–channel joint optimization. Under various video and channel conditions, the method achieves better perceptual and semantic quality at low bitrate than conventional H.265 and existing semantic communication baselines, with good channel adaptation.
+      </p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Video TokenCom · 页面生成自本地幻灯 <code>video_tokencom.pptx</code></p>
+    <p><a href="https://github.com/Jesse-men/Video-TokenCom">github.com/Jesse-men/Video-TokenCom</a>（若 404，请确认仓库已创建或名称拼写）</p>
+  </footer>
+</body>
+</html>
