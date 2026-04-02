@@ -166,6 +166,21 @@
     figure.content-figure {
       margin-top: 16px;
     }
+    figure.figure-mapping {
+      margin-top: 16px;
+      max-width: 58%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    figure.figure-mapping img {
+      width: 100%;
+      height: auto;
+    }
+    @media (max-width: 768px) {
+      figure.figure-mapping {
+        max-width: 100%;
+      }
+    }
     figure {
       margin: 0;
       border: 1px solid var(--border);
@@ -194,6 +209,89 @@
       border-left: 4px solid var(--accent);
       border-radius: 0 var(--radius) var(--radius) 0;
       font-size: 0.9375rem;
+    }
+
+    .intent-demo {
+      margin-top: 20px;
+      padding: 18px 20px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--bg-muted);
+    }
+    .intent-demo-lead {
+      margin: 0 0 14px;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      max-width: 42rem;
+    }
+    .intent-demo-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+    .intent-demo-btn {
+      font-family: inherit;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: var(--radius);
+      border: 1px solid rgba(27,31,36,.15);
+      background: #2da44e;
+      color: #fff;
+      cursor: pointer;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.25);
+    }
+    .intent-demo-btn:hover {
+      background: #2c974b;
+    }
+    .intent-demo-btn-secondary {
+      background: var(--bg);
+      color: var(--text);
+      border-color: var(--border);
+      box-shadow: none;
+    }
+    .intent-demo-btn-secondary:hover {
+      background: var(--bg-muted);
+    }
+    .intent-demo-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .intent-demo-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      gap: 16px 20px;
+    }
+    .intent-demo-caption {
+      flex: 1 1 220px;
+      max-width: 320px;
+      margin: 0;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      color: var(--text);
+    }
+    .intent-demo-k {
+      display: block;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .intent-demo-video-wrap {
+      flex: 1 1 280px;
+      min-width: 0;
+      max-width: 100%;
+    }
+    .intent-demo-video {
+      width: 100%;
+      max-width: 640px;
+      height: auto;
+      display: block;
+      border-radius: var(--radius);
+      background: #000;
+      vertical-align: middle;
     }
 
     footer.site-footer {
@@ -232,6 +330,17 @@
       .badge {
         background: #21262d;
         color: var(--text-secondary);
+      }
+      .intent-demo {
+        background: #161b22;
+      }
+      .intent-demo-btn-secondary {
+        background: #21262d;
+        color: var(--text);
+        border-color: var(--border);
+      }
+      .intent-demo-btn-secondary:hover {
+        background: #30363d;
       }
     }
   </style>
@@ -316,7 +425,7 @@
         <li><strong>Step 3 — Mapping to the token grid.</strong> The tokenizer outputs a 3D grid (time × height × width). Pixel-level masks are aggregated over corresponding temporal and spatial token blocks and thresholded to obtain a <strong>token-level binary semantic mask</strong>: if the fraction of “intended” pixels in a token’s region exceeds the threshold, that token is intended; otherwise non-intended. This yields <strong>intended</strong> and <strong>non-intended</strong> token sets for multi-rate coding and UEP.</li>
       </ul>
 
-      <figure class="content-figure">
+      <figure class="content-figure figure-mapping">
         <img src="assets/mapping.png" alt="Mapping from pixel-level semantic masks to the video token grid" loading="lazy" />
       </figure>
 
@@ -351,6 +460,29 @@
         <img src="assets/women_hit_1.jpg" alt="Visual example of intent-driven high-precision regions in the video" loading="lazy" />
       </figure>
 
+      <div class="intent-demo" id="intent-demo">
+        <p class="intent-demo-lead">Same source video and similar bitrate (~11-bit token precision); only <strong>textual intent</strong> changes. Use the buttons to play or pause both clips together.</p>
+        <div class="intent-demo-toolbar" role="group" aria-label="Synchronized playback">
+          <button type="button" class="intent-demo-btn" id="intent-play-both">Play both</button>
+          <button type="button" class="intent-demo-btn intent-demo-btn-secondary" id="intent-pause-both">Pause both</button>
+          <button type="button" class="intent-demo-btn intent-demo-btn-secondary" id="intent-restart-both">Restart both</button>
+        </div>
+        <div class="intent-demo-grid">
+          <div class="intent-demo-row">
+            <p class="intent-demo-caption"><span class="intent-demo-k">Textual intent:</span> The woman is hitting the man's mobile phone.</p>
+            <div class="intent-demo-video-wrap">
+              <video id="intent-video-woman" class="intent-demo-video" src="assets/videos/woman_hit_11bit.mp4" controls playsinline preload="metadata" width="640" height="360"></video>
+            </div>
+          </div>
+          <div class="intent-demo-row">
+            <p class="intent-demo-caption"><span class="intent-demo-k">Textual intent:</span> Sky.</p>
+            <div class="intent-demo-video-wrap">
+              <video id="intent-video-sky" class="intent-demo-video" src="assets/videos/sky_11bit.mp4" controls playsinline preload="metadata" width="640" height="360"></video>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <h3>4.3 Channel adaptation</h3>
       <p>
         Under different bandwidth budgets and SNRs, the joint optimizer selects different MCS and bit precision. As bandwidth increases, PSNR improves and delay decreases. At low SNR, H.265 often fails to decode a large fraction of frames, while this framework remains decodable across SNRs and is more robust.
@@ -383,5 +515,37 @@
   <footer class="site-footer">
     <p><a href="https://github.com/Jesse-men/Video-TokenCom">github.com/Jesse-men/Video-TokenCom</a></p>
   </footer>
+  <script>
+    (function () {
+      var a = document.getElementById('intent-video-woman');
+      var b = document.getElementById('intent-video-sky');
+      if (!a || !b) return;
+      function runBoth(fn) {
+        fn.call(a);
+        fn.call(b);
+      }
+      document.getElementById('intent-play-both').addEventListener('click', function () {
+        runBoth(function () {
+          var p = this.play();
+          if (p && typeof p.catch === 'function') p.catch(function () {});
+        });
+      });
+      document.getElementById('intent-pause-both').addEventListener('click', function () {
+        runBoth(function () {
+          this.pause();
+        });
+      });
+      document.getElementById('intent-restart-both').addEventListener('click', function () {
+        runBoth(function () {
+          this.pause();
+          this.currentTime = 0;
+        });
+        runBoth(function () {
+          var p = this.play();
+          if (p && typeof p.catch === 'function') p.catch(function () {});
+        });
+      });
+    })();
+  </script>
 </body>
 </html>
