@@ -163,7 +163,7 @@
     section.card ul { margin: 8px 0 0; padding-left: 1.25rem; }
     section.card li { margin-bottom: 6px; }
 
-    figure.result-benchmark {
+    figure.content-figure {
       margin-top: 16px;
     }
     figure {
@@ -283,6 +283,10 @@
     <section id="architecture" class="card">
       <h2>2. Architecture</h2>
 
+      <figure class="content-figure">
+        <img src="assets/Architecture_6.png" alt="Overall architecture of textual intent–guided video TokenCom" loading="lazy" />
+      </figure>
+
       <h3>Textual intent–guided token source encoder</h3>
       <p>
         Inputs are the raw video and a user textual intent description. A pretrained video tokenizer turns the video into a discrete token grid. In parallel, a vision–language model and optical flow find regions that match the textual intent in space and time, and map them onto the token grid to obtain “user-intended” and “non-intended” token sets. <strong>Semantic-aware multi-rate coding</strong> follows: intended tokens are transmitted at full codebook precision (e.g. 16 bits), while non-intended tokens are encoded differentially at reduced precision relative to a reference frame (e.g. 11 bits), saving bitrate while keeping the quality of regions of interest.
@@ -312,6 +316,10 @@
         <li><strong>Step 3 — Mapping to the token grid.</strong> The tokenizer outputs a 3D grid (time × height × width). Pixel-level masks are aggregated over corresponding temporal and spatial token blocks and thresholded to obtain a <strong>token-level binary semantic mask</strong>: if the fraction of “intended” pixels in a token’s region exceeds the threshold, that token is intended; otherwise non-intended. This yields <strong>intended</strong> and <strong>non-intended</strong> token sets for multi-rate coding and UEP.</li>
       </ul>
 
+      <figure class="content-figure">
+        <img src="assets/mapping.png" alt="Mapping from pixel-level semantic masks to the video token grid" loading="lazy" />
+      </figure>
+
       <h3>3.2 Semantic-aware multi-rate coding and UEP optimization</h3>
       <p><strong>Multi-rate source coding:</strong></p>
       <ul>
@@ -330,9 +338,8 @@
         At the same or lower BPP (e.g. 0.013 BPP), the method consistently outperforms H.265 and the diffusion-based VC-DM in PSNR, LPIPS, FVD, etc. On UVG, average PSNR is about <strong>26.36 dB</strong> and FVD about <strong>1289</strong>. At 6 dB SNR, FVD is reduced by roughly 1500 compared to conventional H.265 transmission. Experiments use <strong>MCL-JCV</strong> and <strong>UVG</strong>, with Cosmos video tokenizer and CLIP as the vision–language model.
       </p>
 
-      <figure class="result-benchmark">
+      <figure class="content-figure">
         <img src="assets/benchmark.png" alt="Benchmark comparison with baselines on MCL-JCV and UVG" loading="lazy" />
-        <figcaption>Benchmark comparison (MCL-JCV &amp; UVG)</figcaption>
       </figure>
 
       <h3>4.2 Controllability by textual intent</h3>
@@ -340,10 +347,18 @@
         When the intent changes from “the woman is hitting the man’s mobile phone” to “sky”, the high-precision region shifts from the person and phone to the sky, with similar total bitrate—showing rate allocation follows user intent.
       </p>
 
+      <figure class="content-figure">
+        <img src="assets/women_hit_1.jpg" alt="Visual example of intent-driven high-precision regions in the video" loading="lazy" />
+      </figure>
+
       <h3>4.3 Channel adaptation</h3>
       <p>
         Under different bandwidth budgets and SNRs, the joint optimizer selects different MCS and bit precision. As bandwidth increases, PSNR improves and delay decreases. At low SNR, H.265 often fails to decode a large fraction of frames, while this framework remains decodable across SNRs and is more robust.
       </p>
+
+      <figure class="content-figure">
+        <img src="assets/Comparison_with_h265_pdu.png" alt="Comparison with H.265 under channel adaptation" loading="lazy" />
+      </figure>
     </section>
 
     <section id="ablation" class="card">
@@ -351,6 +366,10 @@
       <p>
         Removing textual intent (randomly choosing “non-intended” tokens) degrades CLIP, LPIPS, and FVD at low <em>B<sub>Delta</sub></em>, showing that <strong>intent-guided rate allocation</strong> is important for semantic fidelity.
       </p>
+
+      <figure class="content-figure">
+        <img src="assets/ablation_10_new.png" alt="Ablation study on textual intent and rate allocation" loading="lazy" />
+      </figure>
     </section>
 
     <section id="conclusion" class="card">
