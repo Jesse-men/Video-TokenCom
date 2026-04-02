@@ -227,32 +227,33 @@
     .intent-demo-toolbar {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 10px;
       margin-bottom: 18px;
     }
     .intent-demo-btn {
       font-family: inherit;
-      font-size: 0.8125rem;
+      font-size: 0.875rem;
       font-weight: 600;
-      padding: 6px 14px;
+      padding: 8px 16px;
       border-radius: var(--radius);
       border: 1px solid rgba(27,31,36,.15);
-      background: #2da44e;
       color: #fff;
       cursor: pointer;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.25);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.2);
     }
-    .intent-demo-btn:hover {
-      background: #2c974b;
+    .intent-demo-btn-a {
+      background: #0969da;
+      border-color: rgba(27,31,36,.12);
     }
-    .intent-demo-btn-secondary {
-      background: var(--bg);
-      color: var(--text);
-      border-color: var(--border);
-      box-shadow: none;
+    .intent-demo-btn-a:hover {
+      background: #0550ae;
     }
-    .intent-demo-btn-secondary:hover {
-      background: var(--bg-muted);
+    .intent-demo-btn-b {
+      background: #8250df;
+      border-color: rgba(27,31,36,.12);
+    }
+    .intent-demo-btn-b:hover {
+      background: #6c39c7;
     }
     .intent-demo-grid {
       display: flex;
@@ -267,17 +268,23 @@
     }
     .intent-demo-caption {
       flex: 1 1 220px;
-      max-width: 320px;
+      max-width: 340px;
       margin: 0;
-      font-size: 0.9rem;
+      font-size: 1.125rem;
       line-height: 1.5;
-      color: var(--text);
+      color: #0550ae;
     }
     .intent-demo-k {
       display: block;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 4px;
+      font-weight: 700;
+      font-size: 1.25rem;
+      letter-spacing: -0.02em;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .intent-demo-caption .intent-demo-body {
+      color: #0969da;
+      font-weight: 500;
     }
     .intent-demo-video-wrap {
       flex: 1 1 280px;
@@ -334,13 +341,25 @@
       .intent-demo {
         background: #161b22;
       }
-      .intent-demo-btn-secondary {
-        background: #21262d;
-        color: var(--text);
-        border-color: var(--border);
+      .intent-demo-caption {
+        color: #79b8ff;
       }
-      .intent-demo-btn-secondary:hover {
-        background: #30363d;
+      .intent-demo-caption .intent-demo-body {
+        color: #a5d6ff;
+      }
+      .intent-demo-btn-a {
+        background: #1f6feb;
+        border-color: rgba(240,246,252,.1);
+      }
+      .intent-demo-btn-a:hover {
+        background: #388bfd;
+      }
+      .intent-demo-btn-b {
+        background: #8957e5;
+        border-color: rgba(240,246,252,.1);
+      }
+      .intent-demo-btn-b:hover {
+        background: #a371f7;
       }
     }
   </style>
@@ -461,21 +480,20 @@
       </figure>
 
       <div class="intent-demo" id="intent-demo">
-        <p class="intent-demo-lead">Same source video and similar bitrate (~11-bit token precision); only <strong>textual intent</strong> changes. Use the buttons to play or pause both clips together.</p>
-        <div class="intent-demo-toolbar" role="group" aria-label="Synchronized playback">
-          <button type="button" class="intent-demo-btn" id="intent-play-both">Play both</button>
-          <button type="button" class="intent-demo-btn intent-demo-btn-secondary" id="intent-pause-both">Pause both</button>
-          <button type="button" class="intent-demo-btn intent-demo-btn-secondary" id="intent-restart-both">Restart both</button>
+        <p class="intent-demo-lead">Same source video and similar bitrate (~11-bit token precision); only <strong>textual intent</strong> changes. Use a button to play that clip (the other pauses automatically).</p>
+        <div class="intent-demo-toolbar" role="group" aria-label="Play one demo video">
+          <button type="button" class="intent-demo-btn intent-demo-btn-a" id="intent-play-first">Play first video</button>
+          <button type="button" class="intent-demo-btn intent-demo-btn-b" id="intent-play-second">Play second video</button>
         </div>
         <div class="intent-demo-grid">
           <div class="intent-demo-row">
-            <p class="intent-demo-caption"><span class="intent-demo-k">Textual intent:</span> The woman is hitting the man's mobile phone.</p>
+            <p class="intent-demo-caption"><span class="intent-demo-k">Textual intent:</span> <span class="intent-demo-body">The woman is hitting the man's mobile phone.</span></p>
             <div class="intent-demo-video-wrap">
               <video id="intent-video-woman" class="intent-demo-video" src="assets/videos/woman_hit_11bit.mp4" controls playsinline preload="metadata" width="640" height="360"></video>
             </div>
           </div>
           <div class="intent-demo-row">
-            <p class="intent-demo-caption"><span class="intent-demo-k">Textual intent:</span> Sky.</p>
+            <p class="intent-demo-caption"><span class="intent-demo-k">Textual intent:</span> <span class="intent-demo-body">Sky.</span></p>
             <div class="intent-demo-video-wrap">
               <video id="intent-video-sky" class="intent-demo-video" src="assets/videos/sky_11bit.mp4" controls playsinline preload="metadata" width="640" height="360"></video>
             </div>
@@ -520,30 +538,17 @@
       var a = document.getElementById('intent-video-woman');
       var b = document.getElementById('intent-video-sky');
       if (!a || !b) return;
-      function runBoth(fn) {
-        fn.call(a);
-        fn.call(b);
+      function safePlay(el) {
+        var p = el.play();
+        if (p && typeof p.catch === 'function') p.catch(function () {});
       }
-      document.getElementById('intent-play-both').addEventListener('click', function () {
-        runBoth(function () {
-          var p = this.play();
-          if (p && typeof p.catch === 'function') p.catch(function () {});
-        });
+      document.getElementById('intent-play-first').addEventListener('click', function () {
+        b.pause();
+        safePlay(a);
       });
-      document.getElementById('intent-pause-both').addEventListener('click', function () {
-        runBoth(function () {
-          this.pause();
-        });
-      });
-      document.getElementById('intent-restart-both').addEventListener('click', function () {
-        runBoth(function () {
-          this.pause();
-          this.currentTime = 0;
-        });
-        runBoth(function () {
-          var p = this.play();
-          if (p && typeof p.catch === 'function') p.catch(function () {});
-        });
+      document.getElementById('intent-play-second').addEventListener('click', function () {
+        a.pause();
+        safePlay(b);
       });
     })();
   </script>
